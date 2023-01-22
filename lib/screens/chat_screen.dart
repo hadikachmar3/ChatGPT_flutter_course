@@ -1,7 +1,6 @@
 import 'package:chatgpt_course/constants/constants.dart';
+import 'package:chatgpt_course/widgets/chat_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import '../services/assets_manager.dart';
@@ -54,7 +53,11 @@ class _ChatScreenState extends State<ChatScreen> {
               child: ListView.builder(
                   itemCount: 6,
                   itemBuilder: (context, index) {
-                    return const Text("Hello this is a text");
+                    return ChatWidget(
+                      msg: chatMessages[index]["msg"].toString(),
+                      chatIndex: int.parse(
+                          chatMessages[index]["chatIndex"].toString()),
+                    );
                   }),
             ),
             if (_isTyping) ...[
@@ -62,7 +65,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 color: Colors.white,
                 size: 18,
               ),
-              SizedBox(
+              const SizedBox(
                 height: 15,
               ),
               Material(

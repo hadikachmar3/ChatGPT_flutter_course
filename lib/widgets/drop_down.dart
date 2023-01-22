@@ -13,8 +13,9 @@ class _ModelsDrowDownWidgetState extends State<ModelsDrowDownWidget> {
   String currentModel = "Model1";
   @override
   Widget build(BuildContext context) {
-    return DropdownButton(dropdownColor: scaffoldBackgroundColor,
-    iconEnabledColor: Colors.white,
+    return DropdownButton(
+      dropdownColor: scaffoldBackgroundColor,
+      iconEnabledColor: Colors.white,
       items: getModelsItem,
       value: currentModel,
       onChanged: (value) {

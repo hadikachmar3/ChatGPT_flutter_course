@@ -1,6 +1,9 @@
 import 'package:chatgpt_course/constants/constants.dart';
 import 'package:chatgpt_course/services/assets_manager.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/src/widgets/container.dart';
+import 'package:flutter/src/widgets/framework.dart';
 
 import 'text_widget.dart';
 
@@ -48,8 +51,10 @@ class ChatWidget extends StatelessWidget {
                           SizedBox(
                             width: 5,
                           ),
-                          Icon(Icons.thumb_down_alt_outlined,
-                              color: Colors.white)
+                          Icon(
+                            Icons.thumb_down_alt_outlined,
+                            color: Colors.white,
+                          )
                         ],
                       ),
               ],

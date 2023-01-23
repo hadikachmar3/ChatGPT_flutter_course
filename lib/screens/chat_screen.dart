@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:chatgpt_course/constants/constants.dart';
+import 'package:chatgpt_course/models/chat_model.dart';
 import 'package:chatgpt_course/services/api_service.dart';
 import 'package:chatgpt_course/services/services.dart';
 import 'package:chatgpt_course/widgets/chat_widget.dart';
@@ -23,19 +24,22 @@ class _ChatScreenState extends State<ChatScreen> {
   bool _isTyping = false;
 
   late TextEditingController textEditingController;
-
+  late FocusNode focusNode;
   @override
   void initState() {
     textEditingController = TextEditingController();
+    focusNode = FocusNode();
     super.initState();
   }
 
   @override
   void dispose() {
     textEditingController.dispose();
+    focusNode.dispose();
     super.dispose();
   }
 
+  List<ChatModel> chatList = [];
   @override
   Widget build(BuildContext context) {
     final modelsProvider = Provider.of<ModelsProvider>(context);
@@ -61,12 +65,11 @@ class _ChatScreenState extends State<ChatScreen> {
           children: [
             Flexible(
               child: ListView.builder(
-                  itemCount: 6,
+                  itemCount: chatList.length,
                   itemBuilder: (context, index) {
                     return ChatWidget(
-                      msg: chatMessages[index]["msg"].toString(),
-                      chatIndex: int.parse(
-                          chatMessages[index]["chatIndex"].toString()),
+                      msg: chatList[index].msg,
+                      chatIndex: chatList[index].chatIndex,
                     );
                   }),
             ),
@@ -74,58 +77,71 @@ class _ChatScreenState extends State<ChatScreen> {
               const SpinKitThreeBounce(
                 color: Colors.white,
                 size: 18,
-              ), ],
-              const SizedBox(
-                height: 15,
               ),
-              Material(
-                color: cardColor,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: TextField(
-                          style: const TextStyle(color: Colors.white),
-                          controller: textEditingController,
-                          onSubmitted: (value) {
-                            // TODO send message
-                          },
-                          decoration: const InputDecoration.collapsed(
-                              hintText: "How can I help you",
-                              hintStyle: TextStyle(color: Colors.grey)),
-                        ),
+            ],
+            const SizedBox(
+              height: 15,
+            ),
+            Material(
+              color: cardColor,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        focusNode: focusNode,
+                        style: const TextStyle(color: Colors.white),
+                        controller: textEditingController,
+                        onSubmitted: (value) async {
+                          await sendMessageFCT(
+                            modelsProvider: modelsProvider,
+                          );
+                        },
+                        decoration: const InputDecoration.collapsed(
+                            hintText: "How can I help you",
+                            hintStyle: TextStyle(color: Colors.grey)),
                       ),
-                      IconButton(
-                          onPressed: () async {
-                            try {
-                              setState(() {
-                                _isTyping = true;
-                              });
-                              await ApiService.sendMessage(
-                                message: textEditingController.text,
-                                modelId: modelsProvider.getCurrentModel,
-                              );
-                            } catch (error) {
-                              log("error $error");
-                            } finally {
-                              setState(() {
-                                _isTyping = false;
-                              });
-                            }
-                          },
-                          icon: const Icon(
-                            Icons.send,
-                            color: Colors.white,
-                          ))
-                    ],
-                  ),
+                    ),
+                    IconButton(
+                        onPressed: () async {
+                          await sendMessageFCT(
+                            modelsProvider: modelsProvider,
+                          );
+                        },
+                        icon: const Icon(
+                          Icons.send,
+                          color: Colors.white,
+                        ))
+                  ],
                 ),
               ),
-           
+            ),
           ],
         ),
       ),
     );
+  }
+
+  Future<void> sendMessageFCT({required ModelsProvider modelsProvider}) async {
+    try {
+      setState(() {
+        _isTyping = true;
+        chatList.add(ChatModel(msg: textEditingController.text, chatIndex: 0));
+        textEditingController.clear();
+        focusNode.unfocus();
+      });
+      chatList.addAll(await ApiService.sendMessage(
+        message: textEditingController.text,
+        modelId: modelsProvider.getCurrentModel,
+      ));
+      setState(() {});
+    } catch (error) {
+      log("error $error");
+    } finally {
+      setState(() {
+        _isTyping = false;
+      });
+    }
   }
 }

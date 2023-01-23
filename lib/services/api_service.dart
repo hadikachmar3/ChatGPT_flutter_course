@@ -32,4 +32,39 @@ class ApiService {
       rethrow;
     }
   }
+
+  // Send Message fct
+  static Future<void> sendMessage(
+      {required String message, required String modelId}) async {
+    try {
+      var response = await http.post(
+        Uri.parse("$BASE_URL/completions"),
+        headers: {
+          'Authorization': 'Bearer $API_KEY',
+          "Content-Type": "application/json"
+        },
+        body: jsonEncode(
+          {
+            "model": modelId,
+            "prompt": message,
+            "max_tokens": 100,
+          },
+        ),
+      );
+
+      Map jsonResponse = jsonDecode(response.body);
+
+      if (jsonResponse['error'] != null) {
+        // print("jsonResponse['error'] ${jsonResponse['error']["message"]}");
+        throw HttpException(jsonResponse['error']["message"]);
+      }
+
+      if (jsonResponse["choices"].length > 0) {
+        log("jsonResponse[choices]text ${jsonResponse["choices"][0]["text"]}");
+      }
+    } catch (error) {
+      log("error $error");
+      rethrow;
+    }
+  }
 }

@@ -1,10 +1,14 @@
+import 'dart:developer';
+
 import 'package:chatgpt_course/constants/constants.dart';
 import 'package:chatgpt_course/services/api_service.dart';
 import 'package:chatgpt_course/services/services.dart';
 import 'package:chatgpt_course/widgets/chat_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:provider/provider.dart';
 
+import '../providers/models_provider.dart';
 import '../services/assets_manager.dart';
 import '../widgets/text_widget.dart';
 
@@ -16,7 +20,7 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
-  final bool _isTyping = true;
+  bool _isTyping = false;
 
   late TextEditingController textEditingController;
 
@@ -34,6 +38,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final modelsProvider = Provider.of<ModelsProvider>(context);
     return Scaffold(
       appBar: AppBar(
         elevation: 2,
@@ -69,7 +74,7 @@ class _ChatScreenState extends State<ChatScreen> {
               const SpinKitThreeBounce(
                 color: Colors.white,
                 size: 18,
-              ),
+              ), ],
               const SizedBox(
                 height: 15,
               ),
@@ -94,9 +99,19 @@ class _ChatScreenState extends State<ChatScreen> {
                       IconButton(
                           onPressed: () async {
                             try {
-                              await ApiService.getModels();
+                              setState(() {
+                                _isTyping = true;
+                              });
+                              await ApiService.sendMessage(
+                                message: textEditingController.text,
+                                modelId: modelsProvider.getCurrentModel,
+                              );
                             } catch (error) {
-                              print("error $error");
+                              log("error $error");
+                            } finally {
+                              setState(() {
+                                _isTyping = false;
+                              });
                             }
                           },
                           icon: const Icon(
@@ -107,7 +122,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   ),
                 ),
               ),
-            ]
+           
           ],
         ),
       ),

@@ -49,7 +49,7 @@ class ApiService {
           {
             "model": modelId,
             "prompt": message,
-            "max_tokens": 100,
+            "max_tokens": 300,
           },
         ),
       );

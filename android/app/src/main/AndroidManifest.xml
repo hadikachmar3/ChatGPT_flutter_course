@@ -1,5 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.chatgpt_course">
+    <uses-permission android:name="android.permission.INTERNET"/>
    <application
         android:label="chatgpt_course"
         android:name="${applicationName}"

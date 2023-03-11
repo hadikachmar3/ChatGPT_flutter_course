@@ -1,5 +1,4 @@
 import 'package:chatgpt_course/providers/models_provider.dart';
-import 'package:chatgpt_course/services/api_service.dart';
 import 'package:chatgpt_course/widgets/text_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -28,7 +27,7 @@ class _ModelsDrowDownWidgetState extends State<ModelsDrowDownWidget> {
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting &&
               isFirstLoading == true) {
-                isFirstLoading= false;
+            isFirstLoading = false;
             return const FittedBox(
               child: SpinKitFadingCircle(
                 color: Colors.lightBlue,

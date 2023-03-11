@@ -58,8 +58,8 @@ class ApiService {
         ),
       );
 
-      Map jsonResponse = jsonDecode(response.body);
-
+      // Map jsonResponse = jsonDecode(response.body);
+      Map jsonResponse = json.decode(utf8.decode(response.bodyBytes));
       if (jsonResponse['error'] != null) {
         // print("jsonResponse['error'] ${jsonResponse['error']["message"]}");
         throw HttpException(jsonResponse['error']["message"]);
@@ -102,8 +102,9 @@ class ApiService {
         ),
       );
 
-      Map jsonResponse = jsonDecode(response.body);
+      // Map jsonResponse = jsonDecode(response.body);
 
+      Map jsonResponse = json.decode(utf8.decode(response.bodyBytes));
       if (jsonResponse['error'] != null) {
         // print("jsonResponse['error'] ${jsonResponse['error']["message"]}");
         throw HttpException(jsonResponse['error']["message"]);

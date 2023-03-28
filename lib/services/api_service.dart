@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:chatgpt_course/constants/api_consts.dart';
+import 'package:chatgpt_course/constants/constants.dart';
 import 'package:chatgpt_course/models/chat_model.dart';
 import 'package:chatgpt_course/models/models_model.dart';
 import 'package:http/http.dart' as http;
@@ -36,9 +37,28 @@ class ApiService {
 
   // Send Message using ChatGPT API
   static Future<List<ChatModel>> sendMessageGPT(
-      {required String message, required String modelId}) async {
+      {required String message,
+      required String modelId,
+      required List<ChatModel> chatsList,
+      required bool memory}) async {
     try {
       log("modelId $modelId");
+      log("memory $memory");
+      final memChats = List<Map<String, String>>.empty(growable: true);
+      if (memory) {
+        // add all previous chats for model to process (consumes tokens)
+        memChats.addAll(chatsList.map((chat) => {
+              "role": chat.role,
+              "content": chat.msg,
+            }));
+      } else {
+        // if no memory, send only the new message
+        memChats.add({
+          "role": ResponseType.user.name,
+          "content": message,
+        });
+      }
+
       var response = await http.post(
         Uri.parse("$BASE_URL/chat/completions"),
         headers: {
@@ -46,15 +66,7 @@ class ApiService {
           "Content-Type": "application/json"
         },
         body: jsonEncode(
-          {
-            "model": modelId,
-            "messages": [
-              {
-                "role": "user",
-                "content": message,
-              }
-            ]
-          },
+          {"model": modelId, "messages": memChats},
         ),
       );
 
@@ -70,9 +82,9 @@ class ApiService {
         chatList = List.generate(
           jsonResponse["choices"].length,
           (index) => ChatModel(
-            msg: jsonResponse["choices"][index]["message"]["content"],
-            chatIndex: 1,
-          ),
+              msg: jsonResponse["choices"][index]["message"]["content"],
+              chatIndex: 1,
+              role: ResponseType.assistant.name),
         );
       }
       return chatList;
@@ -117,6 +129,7 @@ class ApiService {
           (index) => ChatModel(
             msg: jsonResponse["choices"][index]["text"],
             chatIndex: 1,
+            role: ResponseType.assistant.name
           ),
         );
       }

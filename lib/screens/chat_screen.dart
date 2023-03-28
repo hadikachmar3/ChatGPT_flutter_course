@@ -173,7 +173,7 @@ class _ChatScreenState extends State<ChatScreen> {
         focusNode.unfocus();
       });
       await chatProvider.sendMessageAndGetAnswers(
-          msg: msg, chosenModelId: modelsProvider.getCurrentModel);
+          msg: msg, chosenModelId: modelsProvider.getCurrentModel, memory: modelsProvider.hasMemory);
       // chatList.addAll(await ApiService.sendMessage(
       //   message: textEditingController.text,
       //   modelId: modelsProvider.getCurrentModel,
@@ -195,3 +195,6 @@ class _ChatScreenState extends State<ChatScreen> {
     }
   }
 }
+
+
+

@@ -74,6 +74,9 @@ class ApiService {
       Map jsonResponse = json.decode(utf8.decode(response.bodyBytes));
       if (jsonResponse['error'] != null) {
         // print("jsonResponse['error'] ${jsonResponse['error']["message"]}");
+        if (jsonResponse['error']['code'] == 'context_length_exceeded') {
+          throw const HttpException('max_length');
+        }
         throw HttpException(jsonResponse['error']["message"]);
       }
       List<ChatModel> chatList = [];

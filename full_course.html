@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Course Videos</title>
+  <style>
+    /* Add styles to your video grid here */
+    .videos-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin: 20px 0;
+    }
+
+    .video-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid #ccc;
+      padding: 10px;
+      border-radius: 5px;
+    }
+
+    .video-card img {
+      width: 100%;
+      height: auto;
+      margin-bottom: 10px;
+    }
+
+    .video-card h3 {
+      margin: 0;
+      font-size: 16px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="videos-grid">
+    <!-- Loop through each item in the courseInfo array -->
+    {% for item in courseInfo %}
+    <div class="video-card">
+      <a href="{{ item.videoLink }}">
+        <img src="{{ item.imageThumbnails }}" alt="{{ item.title }}">
+      </a>
+      <h3><a href="{{ item.videoLink }}">{{ item.title }}</a></h3>
+    </div>
+    {% endfor %}
+  </div>
+</body>
+</html>

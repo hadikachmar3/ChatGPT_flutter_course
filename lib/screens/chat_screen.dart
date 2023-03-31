@@ -173,7 +173,7 @@ class _ChatScreenState extends State<ChatScreen> {
         focusNode.unfocus();
       });
       await chatProvider.sendMessageAndGetAnswers(
-          msg: msg, chosenModelId: modelsProvider.getCurrentModel);
+          msg: msg, chosenModelId: modelsProvider.getCurrentModel, memory: modelsProvider.hasMemory);
       // chatList.addAll(await ApiService.sendMessage(
       //   message: textEditingController.text,
       //   modelId: modelsProvider.getCurrentModel,
@@ -181,9 +181,15 @@ class _ChatScreenState extends State<ChatScreen> {
       setState(() {});
     } catch (error) {
       log("error $error");
+      var errorText = error.toString();
+      // disable memory if max token length reached
+      if(error.toString().contains("max_length")) {
+        errorText = 'maximum token length reached. Memory disabled for this session';
+        modelsProvider.setMemoryEnabled(false);
+      }
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: TextWidget(
-          label: error.toString(),
+          label: errorText,
         ),
         backgroundColor: Colors.red,
       ));
@@ -195,3 +201,6 @@ class _ChatScreenState extends State<ChatScreen> {
     }
   }
 }
+
+
+

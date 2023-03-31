@@ -1,3 +1,4 @@
+import 'package:chatgpt_course/widgets/memory_switch.dart';
 import 'package:flutter/material.dart';
 
 import '../constants/constants.dart';
@@ -17,16 +18,33 @@ class Services {
         builder: (context) {
           return Padding(
             padding: const EdgeInsets.all(18.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: const [
-                Flexible(
-                  child: TextWidget(
-                    label: "Chosen Model:",
-                    fontSize: 16,
-                  ),
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: const [
+                    Flexible(
+                      child: TextWidget(
+                        label: "Chosen Model:",
+                        fontSize: 16,
+                      ),
+                    ),
+                    Flexible(flex: 2, child: ModelsDrowDownWidget()),
+                  ],
                 ),
-                Flexible(flex: 2, child: ModelsDrowDownWidget()),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: const [
+                    Flexible(
+                      flex: 3,
+                      child: TextWidget(
+                        label: "Memory (consumes lots of tokens):",
+                        fontSize: 16,
+                      ),
+                    ),
+                    Flexible(flex: 1, child: MemorySwitch()),
+                  ],
+                ),
               ],
             ),
           );

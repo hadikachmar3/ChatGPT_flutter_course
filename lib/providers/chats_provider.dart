@@ -1,3 +1,4 @@
+import 'package:chatgpt_course/constants/constants.dart';
 import 'package:flutter/cupertino.dart';
 
 import '../models/chat_model.dart';
@@ -10,17 +11,15 @@ class ChatProvider with ChangeNotifier {
   }
 
   void addUserMessage({required String msg}) {
-    chatList.add(ChatModel(msg: msg, chatIndex: 0));
+    chatList.add(ChatModel(msg: msg, chatIndex: 0, role: ResponseType.user.name));
     notifyListeners();
   }
 
   Future<void> sendMessageAndGetAnswers(
-      {required String msg, required String chosenModelId}) async {
+      {required String msg, required String chosenModelId, required bool memory}) async {
     if (chosenModelId.toLowerCase().startsWith("gpt")) {
       chatList.addAll(await ApiService.sendMessageGPT(
-        message: msg,
-        modelId: chosenModelId,
-      ));
+          message: msg, modelId: chosenModelId, chatsList: chatList, memory: memory));
     } else {
       chatList.addAll(await ApiService.sendMessage(
         message: msg,

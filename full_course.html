@@ -1,52 +1,60 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Course Videos</title>
-  <style>
-    /* Add styles to your video grid here */
-    .videos-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 20px;
-      margin: 20px 0;
-    }
+	<title>Full Course</title>
+	<style>
+		.grid-container {
+			display: grid;
+			grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+			grid-gap: 20px;
+			align-items: center;
+			justify-items: center;
+			margin-top: 50px;
+			margin-bottom: 50px;
+		}
 
-    .video-card {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      border: 1px solid #ccc;
-      padding: 10px;
-      border-radius: 5px;
-    }
+		.grid-item {
+			text-align: center;
+		}
 
-    .video-card img {
-      width: 100%;
-      height: auto;
-      margin-bottom: 10px;
-    }
+		.grid-item img {
+			max-width: 100%;
+			height: auto;
+		}
 
-    .video-card h3 {
-      margin: 0;
-      font-size: 16px;
-      text-align: center;
-    }
-  </style>
+		.grid-item a {
+			color: black;
+			text-decoration: none;
+		}
+
+		.grid-item h3 {
+			margin-top: 10px;
+			margin-bottom: 10px;
+		}
+
+		@media screen and (max-width: 768px) {
+			.grid-container {
+				grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+			}
+		}
+	</style>
 </head>
 <body>
-  <div class="videos-grid">
-    <!-- Loop through each item in the courseInfo array -->
-    {% for item in courseInfo %}
-    <div class="video-card">
-      <a href="{{ item.videoLink }}">
-        <img src="{{ item.imageThumbnails }}" alt="{{ item.title }}">
-      </a>
-      <h3><a href="{{ item.videoLink }}">{{ item.title }}</a></h3>
+	<div class="grid-container">
+		<script>
+			var courseInfo = [
+				{
+					"imageThumbnails": "https://i.ytimg.com/vi/i8TE4BmG3l4/hqdefault.jpg?sqp=-oaymwEbCKgBEF5IVfKriqkDDggBFQAAiEIYAXABwAEG&rs=AOn4CLDw1ARXE4JTplxUikQol5OOTI7Jtw",
+					"videoLink": "https://www.youtube.com/watch?v=i8TE4BmG3l4&list=PL333BSi_KSQ_AqZQR98tAjxcXYMmPyr8E&index=2&ab_channel=CodingwithHadi",
+					"title": "PROMO - Build ChatGPT App in Flutter using OpenAI API"
+				},
+				{
+					"imageThumbnails": "https://i.ytimg.com/vi/XtaI0inTDMs/hqdefault.jpg?sqp=-oaymwEbCKgBEF5IVfKriqkDDggBFQAAiEIYAXABwAEG&rs=AOn4CLB4FbLDAdDbhQ9_5uY9njmlmdc8Sg",
+					"videoLink": "https://www.youtube.com/watch?v=XtaI0inTDMs&list=PL333BSi_KSQ_AqZQR98tAjxcXYMmPyr8E&index=2&ab_channel=CodingwithHadi",
+					"title": "Introduction - Build ChatGPT App in Flutter using OpenAI API"
+				},
+]
+	<script>
     </div>
-    {% endfor %}
-  </div>
 </body>
-</html>
+</html>       
